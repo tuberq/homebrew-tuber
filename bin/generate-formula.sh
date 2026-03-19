@@ -92,8 +92,8 @@ generate_tuber_tui() {
   local TARGETS=(
     aarch64-apple-darwin
     x86_64-apple-darwin
-    aarch64-unknown-linux-gnu
-    x86_64-unknown-linux-gnu
+    aarch64-unknown-linux-musl
+    x86_64-unknown-linux-musl
   )
 
   declare -A SHAS
@@ -127,12 +127,12 @@ class TuberTui < Formula
 
   on_linux do
     on_arm do
-      url "${BASE_URL}/tuber-tui-aarch64-unknown-linux-gnu.tar.gz"
-      sha256 "${SHAS[aarch64-unknown-linux-gnu]}"
+      url "${BASE_URL}/tuber-tui-aarch64-unknown-linux-musl.tar.gz"
+      sha256 "${SHAS[aarch64-unknown-linux-musl]}"
     end
     on_intel do
-      url "${BASE_URL}/tuber-tui-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "${SHAS[x86_64-unknown-linux-gnu]}"
+      url "${BASE_URL}/tuber-tui-x86_64-unknown-linux-musl.tar.gz"
+      sha256 "${SHAS[x86_64-unknown-linux-musl]}"
     end
   end
 
