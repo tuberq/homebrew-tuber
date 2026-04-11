@@ -79,7 +79,7 @@ FORMULA
 }
 
 generate_tuber_tui() {
-  local REPO="tuberq/tuber-tui"
+  local REPO="tuberq/tuber-rs"
   local VERSION="${1:-}"
 
   if [ -z "$VERSION" ]; then
@@ -149,6 +149,77 @@ FORMULA
   echo "Generated Formula/tuber-tui.rb (v${VERSION})" >&2
 }
 
+generate_tuber_cli() {
+  local REPO="tuberq/tuber-rs"
+  local VERSION="${1:-}"
+
+  if [ -z "$VERSION" ]; then
+    VERSION=$(gh release view --repo "$REPO" --json tagName -q '.tagName' | sed 's/^v//')
+  fi
+
+  local TAG="v${VERSION}"
+  local BASE_URL="https://github.com/${REPO}/releases/download/${TAG}"
+
+  local TARGETS=(
+    aarch64-apple-darwin
+    x86_64-apple-darwin
+    aarch64-unknown-linux-musl
+    x86_64-unknown-linux-musl
+  )
+
+  declare -A SHAS
+
+  echo "Downloading tuber-cli assets for ${TAG} and computing checksums..." >&2
+
+  for target in "${TARGETS[@]}"; do
+    asset="tuber-cli-${target}.tar.gz"
+    sha=$(curl -sfL "${BASE_URL}/${asset}" | shasum -a 256 | awk '{print $1}')
+    SHAS[$target]="$sha"
+    echo "  ${asset}: ${sha}" >&2
+  done
+
+  cat > Formula/tuber-cli.rb <<FORMULA
+class TuberCli < Formula
+  desc "CLI client for tuber work queue"
+  homepage "https://github.com/${REPO}"
+  version "${VERSION}"
+  license "MIT"
+
+  on_macos do
+    on_arm do
+      url "${BASE_URL}/tuber-cli-aarch64-apple-darwin.tar.gz"
+      sha256 "${SHAS[aarch64-apple-darwin]}"
+    end
+    on_intel do
+      url "${BASE_URL}/tuber-cli-x86_64-apple-darwin.tar.gz"
+      sha256 "${SHAS[x86_64-apple-darwin]}"
+    end
+  end
+
+  on_linux do
+    on_arm do
+      url "${BASE_URL}/tuber-cli-aarch64-unknown-linux-musl.tar.gz"
+      sha256 "${SHAS[aarch64-unknown-linux-musl]}"
+    end
+    on_intel do
+      url "${BASE_URL}/tuber-cli-x86_64-unknown-linux-musl.tar.gz"
+      sha256 "${SHAS[x86_64-unknown-linux-musl]}"
+    end
+  end
+
+  def install
+    bin.install "tuber-cli"
+  end
+
+  test do
+    assert_match version.to_s, shell_output("#{bin}/tuber-cli --version")
+  end
+end
+FORMULA
+
+  echo "Generated Formula/tuber-cli.rb (v${VERSION})" >&2
+}
+
 cd "$(dirname "$0")/.."
 
 case "${1:-all}" in
@@ -158,12 +229,16 @@ case "${1:-all}" in
   tuber-tui)
     generate_tuber_tui "${2:-}"
     ;;
+  tuber-cli)
+    generate_tuber_cli "${2:-}"
+    ;;
   all)
     generate_tuber "${2:-}"
     generate_tuber_tui "${2:-}"
+    generate_tuber_cli "${2:-}"
     ;;
   *)
-    echo "Usage: $0 [tuber|tuber-tui|all] [version]" >&2
+    echo "Usage: $0 [tuber|tuber-tui|tuber-cli|all] [version]" >&2
     exit 1
     ;;
 esac
