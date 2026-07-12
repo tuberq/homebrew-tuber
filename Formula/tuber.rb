@@ -1,28 +1,28 @@
 class Tuber < Formula
   desc "A fast work queue - Rust rewrite of beanstalkd"
   homepage "https://github.com/tuberq/tuber"
-  version "0.9.1"
+  version "0.10.0"
   license "MIT"
 
   on_macos do
     on_arm do
-      url "https://github.com/tuberq/tuber/releases/download/v0.9.1/tuber-aarch64-apple-darwin.tar.gz"
-      sha256 "f0d8490483318f12347360efa3319ffb184ac55d6c9f56727db9a53dd1469f41"
+      url "https://github.com/tuberq/tuber/releases/download/v0.10.0/tuber-aarch64-apple-darwin.tar.gz"
+      sha256 "f381af3d2692685eda38caa84c552369d3931c4841dc93a5a6eedcc8af9238b9"
     end
     on_intel do
-      url "https://github.com/tuberq/tuber/releases/download/v0.9.1/tuber-x86_64-apple-darwin.tar.gz"
-      sha256 "e445029ae72c1db6c4d5b3cc04559087a269fe27b1e99e8d8949adb3481b3bac"
+      url "https://github.com/tuberq/tuber/releases/download/v0.10.0/tuber-x86_64-apple-darwin.tar.gz"
+      sha256 "49204bf7a4ec9e6b316369b3ce62b485d31393d9a3671ca4d7adb9bf50bb7f39"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/tuberq/tuber/releases/download/v0.9.1/tuber-aarch64-unknown-linux-gnu.tar.gz"
-      sha256 "f726369303eb1a9bd3ff373007ab02e37d28eabc7df5a4ba8ff4e016c10ca3b1"
+      url "https://github.com/tuberq/tuber/releases/download/v0.10.0/tuber-aarch64-unknown-linux-gnu.tar.gz"
+      sha256 "6e144b89f04c84c25102006767c86411f861988f5b95b0eca7afed5ffc68736d"
     end
     on_intel do
-      url "https://github.com/tuberq/tuber/releases/download/v0.9.1/tuber-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "245603772dc3ccda23d45bf4ffc8f76ffbe5e1270fa9ebf6cedf4965c6d1bbea"
+      url "https://github.com/tuberq/tuber/releases/download/v0.10.0/tuber-x86_64-unknown-linux-gnu.tar.gz"
+      sha256 "95cfee5c08215dfe2d6d016a844f82a2f85ecdde35f20e44d52af9b99ba552bc"
     end
   end
 
